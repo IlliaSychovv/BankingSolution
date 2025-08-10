@@ -1,6 +1,6 @@
-namespace BankingSolution.Application.DTO_s.Account;
+namespace BankingSolution.Application.DTO.Account;
 
-public record AccountDto
+public record CreateAccountDto
 {
     public Guid Id { get; set; }
     public string AccountNumber { get; set; } 

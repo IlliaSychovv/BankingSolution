@@ -10,6 +10,14 @@ public class AppDbContext : DbContext
     {
         
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Account>()
+            .HasIndex(x => x.AccountNumber);
+    }
     
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }

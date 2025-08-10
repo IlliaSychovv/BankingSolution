@@ -1,6 +1,4 @@
-using Banking.Solution.Domain.Entity;
-using BankingSolution.Application.DTO_s;
-using BankingSolution.Application.DTO_s.Account;
+using BankingSolution.Application.DTO.Account;
 
 namespace BankingSolution.Application.Interfaces.Services;
 

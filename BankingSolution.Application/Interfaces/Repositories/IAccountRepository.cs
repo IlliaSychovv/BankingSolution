@@ -2,7 +2,7 @@ using Banking.Solution.Domain.Entity;
 
 namespace BankingSolution.Application.Interfaces.Repositories;
 
-public interface IAccountTransactions
+public interface IAccountRepository
 {
     Task<Account> DepositAsync(Account accountInput);
     Task<Account> WithdrawAsync(Account accountInput);

@@ -1,4 +1,4 @@
-namespace BankingSolution.Application.DTO_s.Account;
+namespace BankingSolution.Application.DTO.Account;
 
 public record PagedResponse<AccountDto>
 {

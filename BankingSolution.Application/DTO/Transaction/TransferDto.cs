@@ -1,8 +1,7 @@
-namespace Banking.Solution.Domain.Entity;
+namespace BankingSolution.Application.DTO.Transaction;
 
-public class Transaction
+public record TransferDto
 {
-    public int Id { get; set; }
     public decimal Amount { get; set; }
     public string FromAccount { get; set; }
     public string ToAccount { get; set; }

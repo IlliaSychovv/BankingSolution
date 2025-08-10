@@ -1,5 +1,5 @@
 using Banking.Solution.Domain.Entity;
-using BankingSolution.Application.DTO_s.Account;
+using BankingSolution.Application.DTO.Account;
 using BankingSolution.Application.Interfaces.Repositories;
 using BankingSolution.Application.Services;
 using Moq;

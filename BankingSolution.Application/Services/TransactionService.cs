@@ -1,5 +1,5 @@
 using Banking.Solution.Domain.Entity;
-using BankingSolution.Application.DTO_s.Transaction;
+using BankingSolution.Application.DTO.Transaction;
 using BankingSolution.Application.Interfaces.Repositories;
 using BankingSolution.Application.Interfaces.Services;
 using Mapster;
@@ -8,18 +8,18 @@ namespace BankingSolution.Application.Services;
 
 public class TransactionService : ITransactionService
 {
-    private readonly IAccountTransactions _accountTransactions;
+    private readonly IAccountRepository _accountRepository;
 
-    public TransactionService(IAccountTransactions accountTransactions)
+    public TransactionService(IAccountRepository accountRepository)
     {
-        _accountTransactions = accountTransactions;
+        _accountRepository = accountRepository;
     }
 
     public async Task<DepositDto> Deposit(DepositDto dto)
     {
         var accountEntity = dto.Adapt<Account>();
         
-        var account = await _accountTransactions.DepositAsync(accountEntity);
+        var account = await _accountRepository.DepositAsync(accountEntity);
         
         var result = account.Adapt<DepositDto>();
         return result;
@@ -29,7 +29,7 @@ public class TransactionService : ITransactionService
     {
         var accountEntity = dto.Adapt<Account>();
         
-        var account = await _accountTransactions.WithdrawAsync(accountEntity);
+        var account = await _accountRepository.WithdrawAsync(accountEntity);
         
         var result = account.Adapt<WithdrawDto>();
         return result;
@@ -39,7 +39,7 @@ public class TransactionService : ITransactionService
     {
         var transactionEntity = dto.Adapt<Transaction>();
         
-        var transaction = await _accountTransactions.TransferAsync(transactionEntity);
+        var transaction = await _accountRepository.TransferAsync(transactionEntity);
         
         var result = transaction.Adapt<TransferDto>();
         return result;

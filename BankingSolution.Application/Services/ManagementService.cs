@@ -1,5 +1,5 @@
 using Banking.Solution.Domain.Entity;
-using BankingSolution.Application.DTO_s.Account;
+using BankingSolution.Application.DTO.Account;
 using BankingSolution.Application.Interfaces.Repositories;
 using BankingSolution.Application.Interfaces.Services;
 using Mapster;
@@ -9,17 +9,17 @@ namespace BankingSolution.Application.Services;
 
 public class ManagementService : IManagementService
 {
-    private readonly IManagementRepository _managementrepository;
+    private readonly IManagementRepository _managementRepository;
 
     public ManagementService(IManagementRepository repository)
     {
-        _managementrepository = repository;
+        _managementRepository = repository;
     }
 
     public async Task<PagedResponse<AccountDto>> GetPagedAccount(int pageNumber, int pageSize)
     {
-        var accounts = await _managementrepository.GetAllAsync(pageNumber, pageSize);
-        var totalCount = await _managementrepository.GetTotalCount();
+        var accounts = await _managementRepository.GetAllAsync(pageNumber, pageSize);
+        var totalCount = await _managementRepository.GetTotalCount();
         
         var accountDto = accounts.Select(x => x.Adapt<AccountDto>()).ToList();
 
@@ -36,14 +36,14 @@ public class ManagementService : IManagementService
         var account = dto.Adapt<Account>();
         account.Id = SequentialGuidGenerator.Instance.NewGuid();
         
-        await _managementrepository.AddAsync(account);
+        await _managementRepository.AddAsync(account);
 
         return account.Adapt<CreateAccountDto>();
     }
     
     public async Task<AccountDto> GetAccountByNumber(string number)
     {
-        var account = await _managementrepository.GetByNumberAsync(number);
+        var account = await _managementRepository.GetByNumberAsync(number);
         if (account == null)
             throw new Exception("Account not found");
         

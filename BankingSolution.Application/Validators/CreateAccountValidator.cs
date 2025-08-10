@@ -1,5 +1,5 @@
 using System.Data;
-using BankingSolution.Application.DTO_s.Account;
+using BankingSolution.Application.DTO.Account;
 using FluentValidation;
 
 namespace BankingSolution.Application.Validators;
@@ -21,6 +21,6 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountDto>
             .MinimumLength(3).WithMessage("Account name must be at least 3 characters.");
         
         RuleFor(x => x.Balance)
-            .GreaterThan(0).WithMessage("Balance must be greater than zero.");
+            .GreaterThan(0).WithMessage("Balance must be greater than 0");
     }
 }

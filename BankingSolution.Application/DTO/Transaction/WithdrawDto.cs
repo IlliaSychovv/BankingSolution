@@ -1,6 +1,6 @@
-namespace BankingSolution.Application.DTO_s.Transaction;
+namespace BankingSolution.Application.DTO.Transaction;
 
-public record DepositDto
+public record WithdrawDto
 {
     public string AccountNumber { get; set; }
     public decimal Balance { get; set; }

@@ -1,4 +1,4 @@
-using BankingSolution.Application.DTO_s.Transaction;
+using BankingSolution.Application.DTO.Transaction;
 
 namespace BankingSolution.Application.Interfaces.Services;
 

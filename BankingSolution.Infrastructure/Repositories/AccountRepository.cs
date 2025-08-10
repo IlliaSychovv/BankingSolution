@@ -1,15 +1,16 @@
 using Banking.Solution.Domain.Entity;
+using Banking.Solution.Domain.Exceptions;
 using Banking.Solution.Infrastructure.Data;
 using BankingSolution.Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Solution.Infrastructure.Repositories;
 
-public class AccountTransactions : IAccountTransactions
+public class AccountRepository : IAccountRepository
 {
     private readonly AppDbContext _context;
 
-    public AccountTransactions(AppDbContext context)
+    public AccountRepository(AppDbContext context)
     {
         _context = context;
     }
@@ -17,8 +18,6 @@ public class AccountTransactions : IAccountTransactions
     public async Task<Account> DepositAsync(Account accountInput)
     {
         var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == accountInput.AccountNumber);
-        if (account == null)
-            throw new Exception("Account not found");
         
         account.Balance += accountInput.Balance;
         await _context.SaveChangesAsync();
@@ -29,11 +28,8 @@ public class AccountTransactions : IAccountTransactions
     public async Task<Account> WithdrawAsync(Account accountInput)
     {
         var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == accountInput.AccountNumber);
-        if (account == null)
-            throw new Exception("Account not found");
-        
         if (account.Balance < accountInput.Balance)
-            throw new Exception("Insufficient balance");
+            throw new InsufficientBalanceException();
         
         account.Balance -= accountInput.Balance;
         await _context.SaveChangesAsync();
@@ -45,14 +41,11 @@ public class AccountTransactions : IAccountTransactions
     {
         using var dbTransaction = await _context.Database.BeginTransactionAsync();
 
-        var fromAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.fromAccount);
-        var toAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.toAccount);
-    
-        if (fromAccount == null || toAccount == null)
-            throw new Exception("Account not found");
-    
+        var fromAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.FromAccount);
+        var toAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.ToAccount);
+
         if (fromAccount.Balance < transaction.Amount)
-            throw new Exception("Insufficient balance");
+            throw new InsufficientBalanceException();
     
         try
         {

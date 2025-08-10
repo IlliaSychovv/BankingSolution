@@ -1,5 +1,8 @@
 bin/
 obj/
+**/Properties/
+.idea/
+.idea.BankingSolution/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/

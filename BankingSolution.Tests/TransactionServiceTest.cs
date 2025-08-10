@@ -1,5 +1,5 @@
 using Banking.Solution.Domain.Entity;
-using BankingSolution.Application.DTO_s.Transaction;
+using BankingSolution.Application.DTO.Transaction;
 using BankingSolution.Application.Interfaces.Repositories;
 using BankingSolution.Application.Services;
 using Moq;
@@ -9,12 +9,12 @@ namespace BankingSolution.Tests;
 
 public class TransactionServiceTest
 {
-    private readonly Mock<IAccountTransactions> _accountTransactions;
+    private readonly Mock<IAccountRepository> _accountTransactions;
     private readonly TransactionService _service;
 
     public TransactionServiceTest()
     {
-        _accountTransactions = new Mock<IAccountTransactions>();
+        _accountTransactions = new Mock<IAccountRepository>();
         _service = new TransactionService(_accountTransactions.Object);
     }
 
@@ -80,8 +80,8 @@ public class TransactionServiceTest
         var transaction = new Transaction
         {
             Amount = 100m,
-            fromAccount = "ABC123",
-            toAccount = "XYZ123"
+            FromAccount = "ABC123",
+            ToAccount = "XYZ123"
         };
         
         _accountTransactions
@@ -91,15 +91,15 @@ public class TransactionServiceTest
         var transfer = new TransferDto
         {
             Amount = 100m,
-            fromAccount = "ABC123",
-            toAccount = "XYZ123"
+            FromAccount = "ABC123",
+            ToAccount = "XYZ123"
         };
         
         var result = await _service.Transfer(transfer);
         
         result.ShouldNotBeNull();
-        result.fromAccount.ShouldBe("ABC123");
-        result.toAccount.ShouldBe("XYZ123");
+        result.FromAccount.ShouldBe("ABC123");
+        result.ToAccount.ShouldBe("XYZ123");
         result.Amount.ShouldBe(100m);
         
         _accountTransactions.Verify(x => x.TransferAsync(It.IsAny<Transaction>()), Times.Once);

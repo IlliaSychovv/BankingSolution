@@ -4,7 +4,7 @@ using BankingSolution.Application.Interfaces.Repositories;
 using BankingSolution.Application.Interfaces.Services;
 using BankingSolution.Application.Services;
 using BankingSolution.Application.Validators;
-using BankingSolution.Middlware;
+using BankingSolution.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAccountValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<DepositValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<TransferValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<WithdrawValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -27,7 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IManagementRepository, ManagementRepository>();
 builder.Services.AddScoped<IManagementService, ManagementService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-builder.Services.AddScoped<IAccountTransactions, AccountTransactions>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 
