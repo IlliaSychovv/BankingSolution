@@ -12,6 +12,7 @@ public class WithdrawValidator : AbstractValidator<WithdrawDto>
             .MinimumLength(5).WithMessage("Account number must be at least 5 characters.");
         
         RuleFor(x => x.Balance)
+            .NotEmpty().WithMessage("Balance cannot be empty")
             .GreaterThan(0).WithMessage("Balance must be greater than 0");
     }
 }

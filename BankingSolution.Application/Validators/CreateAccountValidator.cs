@@ -21,6 +21,7 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountDto>
             .MinimumLength(3).WithMessage("Account name must be at least 3 characters.");
         
         RuleFor(x => x.Balance)
+            .NotEmpty().WithMessage("Balance cannot be empty")
             .GreaterThan(0).WithMessage("Balance must be greater than 0");
     }
 }

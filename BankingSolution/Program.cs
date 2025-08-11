@@ -20,7 +20,10 @@ builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddScoped<IManagementRepository, ManagementRepository>();
 builder.Services.AddScoped<IManagementService, ManagementService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
@@ -34,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

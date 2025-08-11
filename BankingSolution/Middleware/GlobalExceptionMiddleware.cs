@@ -1,55 +1,51 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Text.Json;
+using Microsoft.AspNetCore.Diagnostics;
+using Banking.Solution.Domain.Exceptions;
 
 namespace BankingSolution.Middleware;
 
-public class GlobalExceptionMiddleware
+public class GlobalExceptionHandler : IExceptionHandler
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+    private readonly ILogger<GlobalExceptionHandler> _logger;
 
-    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
     {
-        _next = next;
         _logger = logger;
     }
-
-    public async Task Invoke(HttpContext context)
+    
+    private static readonly Dictionary<Type, (int StatusCode, string Title)> ExceptionMap = new()
     {
-        try
-        {
-            await _next(context);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Exception occured");
-            await HandleExceptionAsync(context, ex);
-        }
-    }
+        { typeof(ValidationException), ((int)HttpStatusCode.BadRequest, "Validation error") },
+        { typeof(NotFoundException), ((int)HttpStatusCode.NotFound, "Resource not found") },
+        { typeof(UnauthorizedAccessException), ((int)HttpStatusCode.Unauthorized, "Access denied") }
+    };
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken)
     {
-        HttpStatusCode status;
-        string message;
-
-        if (exception is InvalidOperationException)
-        {
-            status = HttpStatusCode.BadRequest;
-            message = exception.Message;
-        }
+         var (statusCode, title) = ExceptionMap.TryGetValue(exception.GetType(), out var mapped)
+            ? mapped
+            : ((int)HttpStatusCode.InternalServerError, "Internal Server Error");
+         
+         if (statusCode == (int)HttpStatusCode.InternalServerError)
+            _logger.LogError(exception, "Unhandled exception");
         else
+            _logger.LogWarning(exception, "Handled Exception: {Title}", title);
+        
+         var problemDetails = new
         {
-            status = HttpStatusCode.InternalServerError;
-            message = exception.Message;
-        }
+            status = statusCode,
+            title,
+            detail = exception.Message
+        };
 
-        var response = new { status = (int)status, message };
-        
-        var load = JsonSerializer.Serialize(response);
-        
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)status;
-        
-        await context.Response.WriteAsync(load);
+        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.ContentType = "application/json";
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+        return true;  
     }
 }
