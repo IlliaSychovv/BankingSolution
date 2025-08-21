@@ -39,7 +39,7 @@ public class AccountRepository : IAccountRepository
     
     public async Task<Transaction> TransferAsync(Transaction transaction)
     {
-        using var dbTransaction = await _context.Database.BeginTransactionAsync();
+        await using var dbTransaction = await _context.Database.BeginTransactionAsync();
 
         var fromAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.FromAccount);
         var toAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountNumber == transaction.ToAccount);

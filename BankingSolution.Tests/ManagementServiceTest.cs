@@ -51,8 +51,7 @@ public class ManagementServiceTest
     public async Task AddAccount_ShouldCreateAccount_WhenWeCreateAccount()
     {
         var accountDto = new CreateAccountDto
-        {
-            Id = Guid.NewGuid(),
+        { 
             AccountNumber = "ABC123",
             AccountName = "AccountName",
             Balance = 100m

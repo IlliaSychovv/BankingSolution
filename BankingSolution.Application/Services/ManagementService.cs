@@ -31,14 +31,14 @@ public class ManagementService : IManagementService
         };
     }
 
-    public async Task<CreateAccountDto> AddAccount(CreateAccountDto dto)
+    public async Task<AccountDto> AddAccount(CreateAccountDto dto)
     {
         var account = dto.Adapt<Account>();
         account.Id = SequentialGuidGenerator.Instance.NewGuid();
         
         await _managementRepository.AddAsync(account);
 
-        return account.Adapt<CreateAccountDto>();
+        return account.Adapt<AccountDto>();
     }
     
     public async Task<AccountDto> GetAccountByNumber(string number)

@@ -8,10 +8,6 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountDto>
 {
     public CreateAccountValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Id cannot be empty")
-            .Must(id => id != Guid.Empty).WithMessage("Id must be a valid GUID.");
-        
         RuleFor(x => x.AccountNumber)
             .NotEmpty().WithMessage("Account number cannot be empty")
             .MinimumLength(5).WithMessage("Account number must be at least 5 characters.");
